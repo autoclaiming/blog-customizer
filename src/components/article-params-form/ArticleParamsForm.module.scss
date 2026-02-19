@@ -3,7 +3,7 @@
 	left: 0;
 	width: 616px;
 	height: 100%;
-	overflow: scroll;
+	overflow: auto;
 	transform: translate(-616px);
 	transition: transform 0.5s ease;
 }
@@ -28,6 +28,7 @@
 .bottomContainer {
 	display: flex;
 	justify-content: space-between;
+	width: 100%;
 	margin-top: auto;
 }
 
@@ -39,7 +40,8 @@
 }
 
 .radioGroupSpacing {
-	margin-top: 50px;
+	margin-top: 25px;
+	margin-bottom: 30px;
 }
 
 .separatorSpacing {
@@ -47,6 +49,5 @@
 }
 
 .contentWidthSpacing {
-	margin-top: 50px;
-	margin-bottom: 50px;
+	margin-top: 30px;
 }
