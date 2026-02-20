@@ -40,7 +40,7 @@ export const ArticleParamsForm = ({
 		isOpen: isFormOpen,
 		rootRef,
 		onClose: toggleFormVisibility,
-		onChange: () => { },
+		onChange: () => {},
 	});
 
 	const handleReset = () => {
