@@ -6,7 +6,7 @@ import { RadioGroup } from 'src/ui/radio-group';
 import { Separator } from 'src/ui/separator';
 
 import styles from './ArticleParamsForm.module.scss';
-import React, { useState, FormEvent, useRef } from 'react';
+import { useState, FormEvent, useRef } from 'react';
 import {
 	fontFamilyOptions,
 	fontColors,
@@ -20,49 +20,58 @@ import {
 import { useOutsideClickClose } from 'src/ui/select/hooks/useOutsideClickClose';
 import clsx from 'clsx';
 
-type ArticleParamsFormProps = {
-	articleStyles: ArticleStateType;
-	setArticleStyles: (newStyles: ArticleStateType) => void;
-	isFormOpen: boolean;
-	toggleFormVisibility: () => void;
-};
-
-export const ArticleParamsForm = ({
-	articleStyles,
-	setArticleStyles,
-	isFormOpen,
-	toggleFormVisibility,
-}: ArticleParamsFormProps) => {
-	const [formState, setFormState] = useState<ArticleStateType>(articleStyles);
+export const ArticleParamsForm = () => {
+	const [isMenuOpen, setIsMenuOpen] = useState(false);
+	const [formState, setFormState] =
+		useState<ArticleStateType>(defaultArticleState);
 	const rootRef = useRef<HTMLDivElement>(null);
 
 	useOutsideClickClose({
-		isOpen: isFormOpen,
+		isOpen: isMenuOpen,
 		rootRef,
-		onClose: toggleFormVisibility,
-		onChange: () => { },
+		onClose: () => setIsMenuOpen(false),
+		onChange: () => {},
 	});
+
+	const applyStyles = (newStyles: ArticleStateType) => {
+		const mainEl = rootRef.current?.closest('main');
+		if (mainEl) {
+			mainEl.style.setProperty(
+				'--font-family',
+				newStyles.fontFamilyOption.value
+			);
+			mainEl.style.setProperty('--font-size', newStyles.fontSizeOption.value);
+			mainEl.style.setProperty('--font-color', newStyles.fontColor.value);
+			mainEl.style.setProperty(
+				'--container-width',
+				newStyles.contentWidth.value
+			);
+			mainEl.style.setProperty('--bg-color', newStyles.backgroundColor.value);
+		}
+	};
 
 	const handleReset = () => {
 		setFormState(defaultArticleState);
-		setArticleStyles(defaultArticleState);
+		applyStyles(defaultArticleState);
 	};
 
 	const handleSubmit = (e: FormEvent) => {
 		e.preventDefault();
-		setArticleStyles(formState);
+		applyStyles(formState);
 	};
 
 	const handleChange = (key: keyof ArticleStateType, value: OptionType) => {
 		setFormState((prev) => ({ ...prev, [key]: value }));
 	};
 
+	const toggleMenu = () => setIsMenuOpen((v) => !v);
+
 	return (
 		<div ref={rootRef}>
-			<ArrowButton isOpen={isFormOpen} onClick={toggleFormVisibility} />
+			<ArrowButton isOpen={isMenuOpen} onClick={toggleMenu} />
 			<aside
 				className={clsx(styles.container, {
-					[styles.container_open]: isFormOpen,
+					[styles.container_open]: isMenuOpen,
 				})}>
 				<form className={styles.form} onSubmit={handleSubmit}>
 					<Text weight={800} size={31} uppercase>
